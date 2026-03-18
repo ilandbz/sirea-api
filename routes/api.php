@@ -26,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middleware('role:operador');
     Route::get('/expedientes/buscar', [ExpedienteController::class, 'buscar']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/expedientes/{id}/vincular-usuario', [ExpedienteController::class, 'vincularUsuario']);
 });

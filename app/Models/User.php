@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Casilla::class);
     }
+
+    public function expedientes()
+    {
+        return $this->belongsToMany(Expediente::class)->withPivot('tipo_parte');
+    }
 }
