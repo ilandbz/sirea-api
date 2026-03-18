@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('notificacions', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_seguimiento')->unique(); // Ej: NOT-2024-0001
+            $table->string('codigo_seguimiento')->unique();
             $table->foreignId('expediente_id')->constrained();
             $table->foreignId('receptor_id')->constrained('users');
+            $table->foreignId('emisor_id')->constrained('users');
             $table->string('asunto');
             $table->longText('cuerpo');
-            $table->timestamp('fecha_deposito'); // Fecha exacta de envío
-            $table->timestamp('fecha_lectura')->nullable(); // Clave para plazos legales
+            $table->timestamp('fecha_deposito');
+            $table->timestamp('fecha_lectura')->nullable();
             $table->string('ip_lectura', 45)->nullable();
-            $table->string('hash_integridad'); // SHA-256 del contenido
             $table->timestamps();
         });
     }

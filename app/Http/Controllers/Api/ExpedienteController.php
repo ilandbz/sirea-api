@@ -33,7 +33,19 @@ class ExpedienteController extends Controller
         $expediente = Expediente::create($validated);
         return response()->json($expediente, 201);
     }
+    public function destroy($id)
+    {
+        Expediente::findOrFail($id)->delete();
+        return response()->json(['message' => 'Expediente eliminado']);
+    }
 
+    // Método para eliminar solo UNA parte (abogado) del expediente
+    public function desvincularUsuario(Request $request, $id)
+    {
+        $expediente = Expediente::findOrFail($id);
+        $expediente->usuarios()->detach($request->user_id);
+        return response()->json(['message' => 'Parte eliminada del expediente']);
+    }
     public function vincularUsuario(Request $request, $id)
     {
         $request->validate([
@@ -55,7 +67,11 @@ class ExpedienteController extends Controller
     {
         $term = $request->query('q');
         // Busca por número de expediente o nombre de demandante
-        return Expediente::where('codigo', 'LIKE', "%$term%")
+        return Expediente::with(['usuarios' => function ($query) {
+            $query->select('users.id', 'users.name', 'users.document_number')
+                ->withPivot('tipo_parte'); // Cargamos el tipo de parte (DEMANDANTE, etc.)
+        }])
+            ->where('codigo', 'LIKE', "%$term%")
             ->orWhere('demandante', 'LIKE', "%$term%")
             ->limit(10)
             ->get();

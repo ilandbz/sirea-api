@@ -41,13 +41,18 @@
                           <span class="fw-bold text-dark small">{{ usuario.name }}</span>
                           <br>
                           <small class="text-muted">Doc: {{ usuario.document_number }}</small>
+                          <button class="btn btn-sm text-danger border-0 p-0 ms-1" title="Quitar Parte" @click="quitarParte(exp.id, usuario.id)">
+                            <i class="bi bi-x-circle-fill"></i>
+                          </button>
                         </div>
 
                         <span
                           :class="['badge rounded-pill ms-2', getBadgePartClass(usuario.pivot.tipo_parte)]"
                         >
                           {{ usuario.pivot.tipo_parte }}
+                          
                         </span>
+
                       </div>
                     </div>
                   </div>
@@ -61,7 +66,9 @@
                 <td><span class="badge bg-light text-dark border">{{ exp.estado }}</span></td>
                 <td class="text-end pe-4">
                   <button class="btn btn-sm btn-outline-secondary rounded-circle me-1"><i class="bi bi-pencil"></i></button>
-                  <button class="btn btn-sm btn-outline-danger rounded-circle"><i class="bi bi-trash"></i></button>
+                  <button class="btn btn-sm btn-outline-danger rounded-circle" @click="eliminarExpediente(exp.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
                   <button class="btn btn-sm btn-outline-primary rounded-pill me-1" @click="prepararAsignacion(exp)">
                     <i class="bi bi-person-plus"></i> Asignar Partes
                   </button>
@@ -257,6 +264,36 @@ const getBadgePartClass = (tipoParte) => {
   return 'bg-light text-dark border';
 };
 
+const eliminarExpediente = async (id) => {
+  const result = await Swal.fire({
+    title: '¿Eliminar Expediente?',
+    text: "Esta acción no se puede deshacer.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(`/expedientes/${id}`);
+      Swal.fire('Eliminado', 'Expediente borrado.', 'success');
+      fetchExpedientes(); // Recargar lista
+    } catch (e) {
+      Swal.fire('Error', 'No se pudo eliminar el expediente.', 'error');
+    }
+  }
+};
+
+const quitarParte = async (expId, userId) => {
+  try {
+    await axios.post(`/expedientes/${expId}/desvincular-usuario`, { user_id: userId });
+    Swal.fire('Desvinculado', 'El usuario ya no pertenece al expediente.', 'success');
+    fetchExpedientes();
+  } catch (e) {
+    Swal.fire('Error', 'No se pudo desvincular.', 'error');
+  }
+};
 
 onMounted(fetchExpedientes);
 </script>

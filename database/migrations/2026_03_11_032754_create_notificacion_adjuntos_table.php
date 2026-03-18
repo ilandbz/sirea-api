@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('notificacion_id')->constrained();
             $table->string('nombre_archivo');
             $table->string('ruta_storage');
-            $table->string('extension', 10);
-            $table->bigInteger('tamaño');
             $table->timestamps();
         });
     }

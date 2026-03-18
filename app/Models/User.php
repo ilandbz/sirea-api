@@ -30,12 +30,6 @@ class User extends Authenticatable
         'is_active'
     ];
 
-    // Si quieres que Laravel use document_number para el login por defecto (opcional)
-    public function getAuthIdentifierName()
-    {
-        return 'document_number';
-    }
-
     /**
      * Get the attributes that should be cast.
      *
