@@ -76,7 +76,15 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="form-label small fw-bold">N° Documento</label>
-                  <input v-model="form.document_number" type="text" class="form-control bg-light border-0" required>
+                  <input
+                    v-model="form.document_number"
+                    type="text"
+                    class="form-control bg-light border-0"
+                    required
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    @input="soloNumeros"
+                  />
                 </div>
               </div>
               <div class="mb-3">
@@ -129,7 +137,9 @@ const fetchUsers = async () => {
     console.error("Error al cargar usuarios", error);
   }
 };
-
+const soloNumeros = (e) => {
+  form.document_number = e.target.value.replace(/\D/g, '');
+};
 const openModal = () => {
   modalInstance = new Modal(document.getElementById('userModal'));
   modalInstance.show();

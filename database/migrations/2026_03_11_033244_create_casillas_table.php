@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained(); // Dueño de la casilla
             $table->string('numero_casilla')->unique(); // Ej: CAS-7782
+            $table->enum('status', ['activa', 'inactiva'])->default('activa');
             $table->timestamps();
         });
     }
