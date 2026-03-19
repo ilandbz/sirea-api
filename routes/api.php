@@ -13,9 +13,9 @@ Route::post('/login', [AuthController::class, 'login']);
 // --- RUTAS PROTEGIDAS (Requieren Token) ---
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    // Route::get('/user', function (Request $request) {
+    //     return $request->user();
+    // });
     Route::get('/expedientes', [ExpedienteController::class, 'index']);
     Route::post('/expedientes', [ExpedienteController::class, 'store']);
     Route::get('/notificaciones', [NotificacionController::class, 'index']);
