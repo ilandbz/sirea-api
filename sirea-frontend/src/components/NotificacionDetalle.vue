@@ -37,10 +37,11 @@
                 <small class="text-muted">Documento Oficial Firmado Digitalmente</small>
               </div>
             </div>
-            <a :href="'/storage/' + file.ruta_storage" 
-               target="_blank" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <button 
+              @click="descargarArchivo(file)" 
+              class="btn btn-primary rounded-pill px-4 shadow-sm">
               <i class="bi bi-download me-1"></i> Descargar
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -56,7 +57,32 @@ import axios from 'axios';
 const route = useRoute();
 const notificacion = ref(null);
 const loading = ref(true);
+const descargarArchivo = async (file) => {
+  try {
+    const response = await axios.get(`/storage/${file.ruta_storage}`, {
+      responseType: 'blob' // IMPORTANTE
+    });
 
+    // Crear URL del archivo
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+
+    // Crear link temporal
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', file.nombre_archivo); // nombre del archivo
+    document.body.appendChild(link);
+
+    // Descargar
+    link.click();
+
+    // Limpiar
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error('Error al descargar archivo', error);
+  }
+};
 const fetchDetalle = async () => {
   try {
     const response = await axios.get(`/notificaciones/${route.params.id}`);
