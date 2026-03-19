@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('notificacions', function (Blueprint $table) {
             $table->id();
             $table->string('codigo_seguimiento')->unique();
-            $table->foreignId('expediente_id')->constrained();
-            $table->foreignId('receptor_id')->constrained('users');
-            $table->foreignId('emisor_id')->constrained('users');
+            $table->foreignId('expediente_id')->constrained('expedientes')->onDelete('cascade');
+            $table->foreignId('receptor_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('emisor_id')->constrained('users')->onDelete('cascade');
             $table->string('asunto');
             $table->longText('cuerpo');
             $table->timestamp('fecha_deposito');
