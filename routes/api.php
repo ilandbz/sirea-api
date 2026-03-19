@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/expedientes/{id}/vincular-usuario', [ExpedienteController::class, 'vincularUsuario']);
 
-
+    Route::get('/notificaciones/{id}', [NotificacionController::class, 'show']);
     Route::put('/usuarios/{id}', [UserController::class, 'update']);
     Route::delete('/usuarios/{id}', [UserController::class, 'destroy']);
     Route::delete('/expedientes/{id}', [ExpedienteController::class, 'destroy']);

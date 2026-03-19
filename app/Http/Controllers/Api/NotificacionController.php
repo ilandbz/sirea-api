@@ -21,24 +21,23 @@ class NotificacionController extends Controller
     }
     public function show($id)
     {
-        $notificacion = Notificacion::findOrFail($id);
+        // Buscamos la notificación con sus adjuntos y el expediente relacionado
+        $notificacion = Notificacion::with(['adjuntos', 'expediente'])->findOrFail($id);
 
+        // Verificamos que el usuario que intenta verla sea el receptor
+        if ($notificacion->receptor_id !== auth()->id()) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
+        // Si es la primera vez que se abre, registramos la lectura
         if (!$notificacion->fecha_lectura) {
             $notificacion->update([
                 'fecha_lectura' => now(),
                 'ip_lectura' => request()->ip()
             ]);
-
-            // Registrar en tabla de auditoría
-            AuditLog::create([
-                'user_id' => auth()->id(),
-                'notificacion_id' => $id,
-                'accion' => 'LECTURA_CASILLA',
-                'metadata' => json_encode(['ua' => request()->userAgent()])
-            ]);
         }
 
-        return new NotificacionResource($notificacion->load('adjuntos'));
+        return response()->json($notificacion);
     }
     // public function store(Request $request)
     // {

@@ -103,8 +103,15 @@ const fetchNotifications = async () => {
 };
 
 const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  if (!dateString) return '---';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('es-PE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
 };
+
 
 const formatTime = (dateString) => {
   return new Date(dateString).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
