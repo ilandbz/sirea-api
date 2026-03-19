@@ -49,4 +49,19 @@ class UserController extends Controller
             return response()->json(['message' => 'Usuario y Casilla creados con éxito'], 201);
         });
     }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->only(['name', 'email', 'role', 'is_active']));
+        return response()->json(['message' => 'Usuario actualizado']);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        // Opcional: Validar si tiene notificaciones antes de borrar
+        $user->delete();
+        return response()->json(['message' => 'Usuario eliminado']);
+    }
 }

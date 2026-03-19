@@ -40,8 +40,11 @@
                 <button class="btn btn-sm btn-outline-primary rounded-circle me-1" title="Ver Historial">
                   <i class="bi bi-clock-history"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-secondary rounded-circle" title="Editar">
+                <button class="btn btn-sm btn-outline-secondary rounded-circle" title="Editar" @click="editarUsuario(user)">
                   <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger rounded-circle" title="Eliminar" @click="eliminarUsuario(user.id)">
+                  <i class="bi bi-trash"></i>
                 </button>
               </td>
             </tr>
@@ -146,6 +149,29 @@ const saveUser = async () => {
   } finally {
     saving.value = false;
   }
+};
+
+const eliminarUsuario = async (id) => {
+  const result = await Swal.fire({
+    title: '¿Eliminar Usuario?',
+    text: "Se perderá el acceso a su casilla electrónica.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Eliminar'
+  });
+
+  if (result.isConfirmed) {
+    await axios.delete(`/usuarios/${id}`);
+    fetchUsers();
+    Swal.fire('Eliminado', 'Usuario borrado con éxito.', 'success');
+  }
+};
+
+// Para editar, puedes reusar tu modal cargando los datos
+const editarUsuario = (user) => {
+  Object.assign(form, user); // Llena el form con los datos del usuario
+  // Aquí abrirías el modal (puedes usar el mismo de registro)
+  openModal(); 
 };
 
 onMounted(fetchUsers);

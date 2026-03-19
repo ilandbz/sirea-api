@@ -22,4 +22,9 @@ class Expediente extends Model
             self::TIPO_CONCILIACION => 'Expediente de Conciliación',
         ];
     }
+
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class)->withPivot('tipo_parte');
+    }
 }
