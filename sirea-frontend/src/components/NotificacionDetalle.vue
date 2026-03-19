@@ -37,7 +37,7 @@
                 <small class="text-muted">Documento Oficial Firmado Digitalmente</small>
               </div>
             </div>
-            <a :href="'http://sirea-api.test/storage/' + file.ruta_storage" 
+            <a :href="'/storage/' + file.ruta_storage" 
                target="_blank" class="btn btn-primary rounded-pill px-4 shadow-sm">
               <i class="bi bi-download me-1"></i> Descargar
             </a>
