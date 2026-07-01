@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 // --- RUTAS PÚBLICAS ---
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 // --- RUTAS PROTEGIDAS (Requieren Token) ---
 Route::middleware('auth:sanctum')->group(function () {

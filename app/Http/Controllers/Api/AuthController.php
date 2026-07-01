@@ -7,10 +7,45 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+use App\Models\Casilla;
 
 class AuthController extends Controller
 {
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'document_number' => 'required|unique:users,document_number',
+            'document_type' => 'required|in:DNI,RUC',
+            'password' => 'required|min:6'
+        ]);
+
+        return DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'document_number' => $request->document_number,
+                'document_type' => $request->document_type,
+                'role' => 'usuario', // Rol por defecto
+                'is_active' => true,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $user->casilla()->create([
+                'numero_casilla' => 'SIREA-' . date('Y') . '-' . str_pad(Casilla::count() + 1, 4, '0', STR_PAD_LEFT),
+                'status' => 'activa'
+            ]);
+
+            return response()->json([
+                'message' => 'Cuenta creada con éxito',
+                'token' => $user->createToken('auth_token')->plainTextToken,
+                'user' => $user->load('casilla')
+            ], 201);
+        });
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([

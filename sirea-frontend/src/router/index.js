@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/auth/Login.vue';
+import Register from '../views/auth/Register.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Inbox from '../components/Inbox.vue'; // Verifica que la ruta sea correcta
 import CargaNotificacion from '../components/CargaNotificacion.vue';
@@ -12,6 +13,11 @@ const routes = [
         path: '/login',
         name: 'login',
         component: Login
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: Register
     },
     {
         path: '/',
