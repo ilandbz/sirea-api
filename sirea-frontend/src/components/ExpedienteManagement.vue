@@ -68,6 +68,9 @@
                 </td>
                 <td><span class="badge bg-light text-dark border">{{ exp.estado }}</span></td>
                 <td class="text-end pe-4">
+                  <button class="btn btn-sm btn-outline-info rounded-circle me-1" title="Historial de Notificaciones" @click="verNotificaciones(exp)">
+                    <i class="bi bi-bell"></i>
+                  </button>
                   <button class="btn btn-sm btn-outline-secondary rounded-circle me-1">
                     <i class="bi bi-pencil"></i>
                   </button>
@@ -78,7 +81,7 @@
                     <i class="bi bi-trash"></i>
                   </button>
                   <button
-                    class="btn btn-sm btn-outline-primary rounded-pill me-1"
+                    class="btn btn-sm btn-outline-primary rounded-pill ms-1"
                     @click="prepararAsignacion(exp)"
                   >
                     <i class="bi bi-person-plus"></i> Asignar Partes
@@ -192,6 +195,58 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Historial de Notificaciones -->
+  <div class="modal fade" id="historialNotificacionesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="fw-bold">Historial de Notificaciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="text-muted small mb-3" v-if="expedienteSeleccionado">
+            Expediente: <strong>{{ expedienteSeleccionado.codigo }}</strong>
+          </p>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
+                <tr>
+                  <th>Destinatario</th>
+                  <th>Asunto</th>
+                  <th>Depositado</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="notif in notificacionesList" :key="notif.id">
+                  <td>
+                    <span class="fw-bold small">{{ notif.receptor?.name || 'Desconocido' }}</span>
+                  </td>
+                  <td><span class="small text-muted">{{ notif.asunto }}</span></td>
+                  <td><span class="small text-muted">{{ new Date(notif.created_at).toLocaleString() }}</span></td>
+                  <td>
+                    <span v-if="notif.fecha_lectura" class="badge bg-success-subtle text-success rounded-pill border border-success">
+                      <i class="bi bi-check-all me-1"></i> Leído el {{ new Date(notif.fecha_lectura).toLocaleString() }}
+                    </span>
+                    <span v-else class="badge bg-secondary-subtle text-secondary rounded-pill border border-secondary">
+                      No leído
+                    </span>
+                  </td>
+                </tr>
+                <tr v-if="notificacionesList.length === 0">
+                  <td colspan="4" class="text-center py-4 text-muted small">
+                    <i class="bi bi-info-circle me-1"></i> No hay notificaciones enviadas para este expediente.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -202,6 +257,10 @@ import { Modal } from 'bootstrap';
 
 const expedientes = ref([]);
 const mostrarModal = ref(false);
+
+const notificacionesList = ref([]);
+const expedienteSeleccionado = ref(null);
+let modalNotificacionesInstance = null;
 
 const form = reactive({
   tipo: 'IA',
@@ -342,6 +401,23 @@ const getBadgePartClass = (tipoParte) => {
   if (tipoParte === 'DEMANDADO') return 'bg-danger-subtle text-danger border border-danger';
   if (tipoParte === 'ARBITRO') return 'bg-secondary-subtle text-secondary border border-secondary';
   return 'bg-light text-dark border';
+};
+
+const verNotificaciones = async (exp) => {
+  expedienteSeleccionado.value = exp;
+  notificacionesList.value = [];
+  try {
+    const res = await axios.get(`/expedientes/${exp.id}/notificaciones`);
+    notificacionesList.value = res.data;
+    
+    if (!modalNotificacionesInstance) {
+      const el = document.getElementById('historialNotificacionesModal');
+      modalNotificacionesInstance = new Modal(el);
+    }
+    modalNotificacionesInstance.show();
+  } catch (error) {
+    Swal.fire('Error', 'No se pudo obtener el historial de notificaciones.', 'error');
+  }
 };
 
 const eliminarExpediente = async (id) => {

@@ -76,4 +76,13 @@ class ExpedienteController extends Controller
             ->limit(10)
             ->get();
     }
+
+    public function notificaciones($id)
+    {
+        $notificaciones = \App\Models\Notificacion::with('receptor')
+            ->where('expediente_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json($notificaciones);
+    }
 }
