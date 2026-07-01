@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <!-- Top Right Action Buttons -->
     <div class="position-absolute top-0 end-0 p-4 d-flex gap-3 z-3">
-      <a href="#" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Manual">
+      <a href="/manual.pdf" target="_blank" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Manual">
         <i class="bi bi-book fs-5" style="color: #003d99;"></i>
       </a>
       <a href="#" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Videos tutoriales">

@@ -28,7 +28,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'document_number' => $request->document_number,
                 'document_type' => $request->document_type,
-                'role' => 'usuario', // Rol por defecto
+                'role' => 'usuario_final', // Rol por defecto (cliente final)
                 'is_active' => true,
                 'password' => Hash::make($request->password),
             ]);
