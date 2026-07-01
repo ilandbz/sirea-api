@@ -32,12 +32,16 @@
                 <span class="text-primary fw-bold">{{ user.casilla?.numero_casilla || 'SIN ASIGNAR' }}</span>
               </td>
               <td>
-                <span :class="['badge rounded-pill', user.is_active ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger']">
+                <button 
+                  @click="toggleStatus(user)"
+                  :class="['btn btn-sm rounded-pill fw-bold border-0', user.is_active ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger']"
+                  title="Cambiar estado"
+                >
                   {{ user.is_active ? 'Activo' : 'Inactivo' }}
-                </span>
+                </button>
               </td>
               <td class="text-end pe-4">
-                <button class="btn btn-sm btn-outline-primary rounded-circle me-1" title="Ver Historial">
+                <button class="btn btn-sm btn-outline-primary rounded-circle me-1" title="Ver Historial" @click="verHistorial(user)">
                   <i class="bi bi-clock-history"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-secondary rounded-circle" title="Editar" @click="editarUsuario(user)">
@@ -182,6 +186,34 @@ const editarUsuario = (user) => {
   Object.assign(form, user); // Llena el form con los datos del usuario
   // Aquí abrirías el modal (puedes usar el mismo de registro)
   openModal(); 
+};
+
+const toggleStatus = async (user) => {
+  try {
+    await axios.put(`/usuarios/${user.id}`, {
+      is_active: !user.is_active
+    });
+    fetchUsers();
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: 'Estado actualizado',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  } catch (error) {
+    Swal.fire('Error', 'No se pudo actualizar el estado', 'error');
+  }
+};
+
+const verHistorial = (user) => {
+  Swal.fire({
+    title: 'Historial de Casilla',
+    text: `Esta función permitirá ver el registro de notificaciones y actividades del usuario ${user.name} en el futuro.`,
+    icon: 'info',
+    confirmButtonText: 'Entendido'
+  });
 };
 
 onMounted(fetchUsers);
