@@ -8,9 +8,6 @@
       <a href="#" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Videos tutoriales">
         <i class="bi bi-camera-video fs-5" style="color: #003d99;"></i>
       </a>
-      <a href="#" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Ayuda">
-        <i class="bi bi-question-circle fs-5" style="color: #003d99;"></i>
-      </a>
     </div>
 
     <div class="login-container d-flex align-items-center justify-content-center">
