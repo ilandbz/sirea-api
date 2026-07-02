@@ -5,7 +5,8 @@
       <a href="/manual.pdf" target="_blank" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Manual">
         <i class="bi bi-book fs-5" style="color: #003d99;"></i>
       </a>
-      <a href="#" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Videos tutoriales">
+      <a href="/video.mp4" class="btn btn-white rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Videos tutoriales"
+      target="_blank">
         <i class="bi bi-camera-video fs-5" style="color: #003d99;"></i>
       </a>
     </div>
