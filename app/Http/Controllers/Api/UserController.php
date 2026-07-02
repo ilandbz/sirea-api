@@ -60,6 +60,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        
+        // Eliminar la casilla asociada para evitar error de clave foránea
+        if ($user->casilla) {
+            $user->casilla()->delete();
+        }
+        
         // Opcional: Validar si tiene notificaciones antes de borrar
         $user->delete();
         return response()->json(['message' => 'Usuario eliminado']);
